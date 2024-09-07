@@ -1,95 +1,103 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import { useEffect, useState, useRef } from "react";
+function CounterWidget({ title, count, onIncrement, onDecrement, className }) {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div className={`${className} widget`}>
+      <h2>{title}</h2>
+      <button onClick={onDecrement}>-</button>
+      <p>{count}</p>
+      <button onClick={onIncrement}>+</button>
     </div>
   );
 }
+export default function Home() {
+  const [outreachCount, setOutreachCount] = useState(0);
+  const initialRender = useRef(true);
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("outreachCount"))) {
+      const outreachCount = localStorage.getItem("outreachCount");
+      setOutreachCount(JSON.parse(outreachCount)) || 0;
+    }
+  }, []); // Run on mount
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    localStorage.setItem("outreachCount", JSON.stringify(outreachCount));
+  }, [outreachCount]);
+
+  function handleIncrement(setCount, count) {
+    setCount(count + 1);
+  }
+  function handleDecrement(setCount, count) {
+    if (count > 0) {
+      setCount(count - 1);
+    }
+  }
+  return (
+    <div className="widget-container">
+      <CounterWidget
+        className="outreach-widget widget"
+        title="Cold Outreach Count Today"
+        count={outreachCount}
+        onIncrement={() => {
+          handleIncrement(setOutreachCount, outreachCount);
+        }}
+        onDecrement={() => {
+          handleDecrement(setOutreachCount, outreachCount);
+        }}
+      />
+      {/* <CounterWidget
+        className="leetcode-widget widget"
+        title="Leetcode Problems Solved Today"
+        count={leetcodeCount}
+        onIncrement={() => {
+          handleIncrement(setLeetCodeCount, leetcodeCount);
+          }}
+          onDecrement={() => {
+            handleDecrement(setLeetCodeCount, leetcodeCount);
+            }}
+            />
+            <CounterWidget
+            className="jobs-applied-widget widget"
+            title="Jobs Applied To Today"
+            count={jobsCount}
+            onIncrement={() => {
+              handleIncrement(setJobsCount, jobsCount);
+              }}
+              onDecrement={() => {
+                handleDecrement(setJobsCount, jobsCount);
+                }}
+                /> */}
+    </div>
+  );
+}
+//ATTEMPT NUMBER 2
+// const [outreachCount, setOutreachCount] = useState(() => {
+//   const outreachCount = localStorage.getItem("outreachCount");
+//   return JSON.parse(outreachCount) || 0;
+// });
+
+// useEffect(() => {
+//   localStorage.setItem("outreachCount", JSON.stringify(outreachCount));
+// }, [outreachCount]);
+
+// useEffect(() => {
+//   const outreachCount = JSON.parse(localStorage.getItem("outreachCount"));
+//   if (outreachCount) {
+//     setOutreachCount(outreachCount);
+//   }
+// }, []);
+// const [outreachCount, setOutreachCount] = useState(() => {
+//   return parseInt(localStorage.getItem("outReachCount")) || 0;
+// });
+// const [leetcodeCount, setLeetCodeCount] = useState(() => {
+//   return parseInt(localStorage.getItem("leetcodeCount")) || 0;
+// });
+// const [jobsCount, setJobsCount] = useState(() => {
+//   return parseInt(localStorage.getItem("jobsCount")) || 0;
+// });
