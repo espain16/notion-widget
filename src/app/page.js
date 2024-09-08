@@ -16,18 +16,16 @@ export default function Home() {
   const initialRender = useRef(true);
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("outreachCount"))) {
-      const outreachCount = localStorage.getItem("outreachCount");
-      setOutreachCount(JSON.parse(outreachCount)) || 0;
-    }
-  }, []); // Run on mount
+    const data = window.localStorage.getItem("outreachCount");
+    if (data !== null) setOutreachCount(JSON.parse(data));
+  }, []);
 
   useEffect(() => {
     if (initialRender.current) {
       initialRender.current = false;
       return;
     }
-    localStorage.setItem("outreachCount", JSON.stringify(outreachCount));
+    window.localStorage.setItem("outreachCount", JSON.stringify(outreachCount));
   }, [outreachCount]);
 
   function handleIncrement(setCount, count) {
@@ -51,53 +49,30 @@ export default function Home() {
           handleDecrement(setOutreachCount, outreachCount);
         }}
       />
-      {/* <CounterWidget
-        className="leetcode-widget widget"
-        title="Leetcode Problems Solved Today"
-        count={leetcodeCount}
-        onIncrement={() => {
-          handleIncrement(setLeetCodeCount, leetcodeCount);
-          }}
-          onDecrement={() => {
-            handleDecrement(setLeetCodeCount, leetcodeCount);
-            }}
-            />
-            <CounterWidget
-            className="jobs-applied-widget widget"
-            title="Jobs Applied To Today"
-            count={jobsCount}
-            onIncrement={() => {
-              handleIncrement(setJobsCount, jobsCount);
-              }}
-              onDecrement={() => {
-                handleDecrement(setJobsCount, jobsCount);
-                }}
-                /> */}
     </div>
   );
+  {
+    /* <CounterWidget
+    className="leetcode-widget widget"
+    title="Leetcode Problems Solved Today"
+    count={leetcodeCount}
+    onIncrement={() => {
+      handleIncrement(setLeetCodeCount, leetcodeCount);
+      }}
+      onDecrement={() => {
+        handleDecrement(setLeetCodeCount, leetcodeCount);
+        }}
+        />
+        <CounterWidget
+        className="jobs-applied-widget widget"
+        title="Jobs Applied To Today"
+        count={jobsCount}
+        onIncrement={() => {
+          handleIncrement(setJobsCount, jobsCount);
+          }}
+          onDecrement={() => {
+            handleDecrement(setJobsCount, jobsCount);
+            }}
+            /> */
+  }
 }
-//ATTEMPT NUMBER 2
-// const [outreachCount, setOutreachCount] = useState(() => {
-//   const outreachCount = localStorage.getItem("outreachCount");
-//   return JSON.parse(outreachCount) || 0;
-// });
-
-// useEffect(() => {
-//   localStorage.setItem("outreachCount", JSON.stringify(outreachCount));
-// }, [outreachCount]);
-
-// useEffect(() => {
-//   const outreachCount = JSON.parse(localStorage.getItem("outreachCount"));
-//   if (outreachCount) {
-//     setOutreachCount(outreachCount);
-//   }
-// }, []);
-// const [outreachCount, setOutreachCount] = useState(() => {
-//   return parseInt(localStorage.getItem("outReachCount")) || 0;
-// });
-// const [leetcodeCount, setLeetCodeCount] = useState(() => {
-//   return parseInt(localStorage.getItem("leetcodeCount")) || 0;
-// });
-// const [jobsCount, setJobsCount] = useState(() => {
-//   return parseInt(localStorage.getItem("jobsCount")) || 0;
-// });
